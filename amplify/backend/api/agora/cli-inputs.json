@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "agora",
+    "serviceName": "AppSync",
+    "gqlSchemaPath": "C:\\Users\\vpukii\\Documents\\source\\agora\\amplify\\backend\\api\\agora\\schema.graphql",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authagora22dd4efd"
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 7,
+        "apiKeyExpirationDate": "2022-05-25T11:23:43.935Z",
+        "keyDescription": "marketplace"
+      }
+    ]
+  }
+}

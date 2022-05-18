@@ -1,0 +1,63 @@
+type Market @model @searchable @auth(rules: [{ allow: public }]) {
+  id: ID!
+  name: String!
+  products: [Product] @hasMany(indexName: "byProduct", fields: ["id"])
+  tags: [String]
+  owner: String!
+  createdAt: String
+}
+
+type Product @model @auth(rules: [{ allow: owner, identityClaim: "sub" }]) {
+  id: ID!
+  marketId: ID! @index(name: "byProduct")
+  description: String!
+  market: Market @belongsTo(fields: ["marketId"])
+  file: S3Object!
+  price: Float!
+  shipped: Boolean!
+  owner: String
+  createdAt: String
+}
+
+type S3Object {
+  bucket: String!
+  region: String!
+  key: String!
+}
+
+type User
+  @model(
+    queries: { get: "getUser" }
+    mutations: { create: "registerUser", update: "updateUser" }
+    subscriptions: null
+  )
+  @auth(rules: [{ allow: public }]) {
+  id: ID!
+  username: String!
+  email: String!
+  registered: Boolean
+  orders: [Order] @hasMany(indexName: "byUser", fields: ["id"])
+}
+
+type Order
+  @model(
+    queries: null
+    mutations: { create: "createOrder" }
+    subscriptions: null
+  )
+  @auth(rules: [{ allow: public }]) {
+  id: ID!
+  userId: ID! @index(name: "byUser")
+  product: Product @hasOne
+  user: User @belongsTo(fields: ["userId"])
+  shippingAddress: ShippingAddress
+  createdAt: String
+}
+
+type ShippingAddress {
+  city: String!
+  country: String!
+  address_line: String!
+  address_state: String!
+  address_zip: String!
+}

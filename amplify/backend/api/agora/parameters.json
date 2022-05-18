@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "agora",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authagora22dd4efd",
+      "Outputs.UserPoolId"
+    ]
+  }
+}
