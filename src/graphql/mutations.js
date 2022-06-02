@@ -1,6 +1,90 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createMarket = /* GraphQL */ `
+  mutation CreateMarket(
+    $input: CreateMarketInput!
+    $condition: ModelMarketConditionInput
+  ) {
+    createMarket(input: $input, condition: $condition) {
+      id
+      name
+      products {
+        items {
+          id
+          marketId
+          description
+          price
+          shipped
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      tags
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateMarket = /* GraphQL */ `
+  mutation UpdateMarket(
+    $input: UpdateMarketInput!
+    $condition: ModelMarketConditionInput
+  ) {
+    updateMarket(input: $input, condition: $condition) {
+      id
+      name
+      products {
+        items {
+          id
+          marketId
+          description
+          price
+          shipped
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      tags
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteMarket = /* GraphQL */ `
+  mutation DeleteMarket(
+    $input: DeleteMarketInput!
+    $condition: ModelMarketConditionInput
+  ) {
+    deleteMarket(input: $input, condition: $condition) {
+      id
+      name
+      products {
+        items {
+          id
+          marketId
+          description
+          price
+          shipped
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      tags
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createProduct = /* GraphQL */ `
   mutation CreateProduct(
     $input: CreateProductInput!
@@ -100,90 +184,6 @@ export const deleteProduct = /* GraphQL */ `
     }
   }
 `;
-export const createMarket = /* GraphQL */ `
-  mutation CreateMarket(
-    $input: CreateMarketInput!
-    $condition: ModelMarketConditionInput
-  ) {
-    createMarket(input: $input, condition: $condition) {
-      id
-      name
-      products {
-        items {
-          id
-          marketId
-          description
-          price
-          shipped
-          owner
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      tags
-      owner
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateMarket = /* GraphQL */ `
-  mutation UpdateMarket(
-    $input: UpdateMarketInput!
-    $condition: ModelMarketConditionInput
-  ) {
-    updateMarket(input: $input, condition: $condition) {
-      id
-      name
-      products {
-        items {
-          id
-          marketId
-          description
-          price
-          shipped
-          owner
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      tags
-      owner
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteMarket = /* GraphQL */ `
-  mutation DeleteMarket(
-    $input: DeleteMarketInput!
-    $condition: ModelMarketConditionInput
-  ) {
-    deleteMarket(input: $input, condition: $condition) {
-      id
-      name
-      products {
-        items {
-          id
-          marketId
-          description
-          price
-          shipped
-          owner
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      tags
-      owner
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const registerUser = /* GraphQL */ `
   mutation RegisterUser(
     $input: CreateUserInput!
@@ -201,11 +201,13 @@ export const registerUser = /* GraphQL */ `
           createdAt
           updatedAt
           orderProductId
+          owner
         }
         nextToken
       }
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -226,11 +228,13 @@ export const updateUser = /* GraphQL */ `
           createdAt
           updatedAt
           orderProductId
+          owner
         }
         nextToken
       }
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -275,6 +279,7 @@ export const createOrder = /* GraphQL */ `
         }
         createdAt
         updatedAt
+        owner
       }
       shippingAddress {
         city
@@ -286,6 +291,7 @@ export const createOrder = /* GraphQL */ `
       createdAt
       updatedAt
       orderProductId
+      owner
     }
   }
 `;

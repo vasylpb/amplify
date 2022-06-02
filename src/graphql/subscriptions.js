@@ -1,6 +1,81 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateMarket = /* GraphQL */ `
+  subscription OnCreateMarket($owner: String) {
+    onCreateMarket(owner: $owner) {
+      id
+      name
+      products {
+        items {
+          id
+          marketId
+          description
+          price
+          shipped
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      tags
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateMarket = /* GraphQL */ `
+  subscription OnUpdateMarket($owner: String) {
+    onUpdateMarket(owner: $owner) {
+      id
+      name
+      products {
+        items {
+          id
+          marketId
+          description
+          price
+          shipped
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      tags
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteMarket = /* GraphQL */ `
+  subscription OnDeleteMarket($owner: String) {
+    onDeleteMarket(owner: $owner) {
+      id
+      name
+      products {
+        items {
+          id
+          marketId
+          description
+          price
+          shipped
+          owner
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      tags
+      owner
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateProduct = /* GraphQL */ `
   subscription OnCreateProduct($owner: String) {
     onCreateProduct(owner: $owner) {
@@ -85,81 +160,6 @@ export const onDeleteProduct = /* GraphQL */ `
       }
       price
       shipped
-      owner
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateMarket = /* GraphQL */ `
-  subscription OnCreateMarket {
-    onCreateMarket {
-      id
-      name
-      products {
-        items {
-          id
-          marketId
-          description
-          price
-          shipped
-          owner
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      tags
-      owner
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateMarket = /* GraphQL */ `
-  subscription OnUpdateMarket {
-    onUpdateMarket {
-      id
-      name
-      products {
-        items {
-          id
-          marketId
-          description
-          price
-          shipped
-          owner
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      tags
-      owner
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteMarket = /* GraphQL */ `
-  subscription OnDeleteMarket {
-    onDeleteMarket {
-      id
-      name
-      products {
-        items {
-          id
-          marketId
-          description
-          price
-          shipped
-          owner
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      tags
       owner
       createdAt
       updatedAt

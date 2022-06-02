@@ -15,6 +15,7 @@
         "apiKeyExpirationDate": "2022-05-25T11:23:43.935Z",
         "keyDescription": "marketplace"
       }
-    ]
+    ],
+    "conflictResolution": {}
   }
 }
