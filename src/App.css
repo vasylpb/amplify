@@ -218,6 +218,10 @@ body {
   font-size: 30px !important;
 }
 
+amplify-s3-image {
+  --height: 200px;
+}
+
 @media (min-width: 640px) {
   .market-title {
     font-size: 3rem;

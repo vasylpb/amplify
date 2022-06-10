@@ -9,11 +9,18 @@
       "UnauthRoleName": "amplify-agora-dev-111014-unauthRole",
       "StackName": "amplify-agora-dev-111014",
       "StackId": "arn:aws:cloudformation:us-east-1:456881278525:stack/amplify-agora-dev-111014/f3d8a6f0-d681-11ec-b2e2-0a47dbacb211",
-      "AmplifyAppId": "dcf59rjle8hti"
+      "AmplifyAppId": "dcf59rjle8hti",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-agora-dev-111014-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
         "agora22dd4efd": {}
+      },
+      "function": {
+        "orderlambda": {
+          "deploymentBucketName": "amplify-agora-dev-111014-deployment",
+          "s3Key": "amplify-builds/orderlambda-58572f6d666e78724733-build.zip"
+        }
       }
     }
   }
