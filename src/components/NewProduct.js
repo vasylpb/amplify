@@ -26,7 +26,7 @@ const NewProduct = ({ marketId }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const { user } = useAuthenticator((context) => [context.user]);
+  const { user } = useAuthenticator(context => [context.user]);
 
   const handleAddProduct = async () => {
     setUploading(true);
@@ -38,7 +38,7 @@ const NewProduct = ({ marketId }) => {
       }`;
       const uploadedFile = await Storage.put(filename, uploadedImage.file, {
         contentType: uploadedImage.file.type,
-        progressCallback: (progress) => {
+        progressCallback: progress => {
           const percentUploaded = Math.round(
             (progress.loaded / progress.total) * 100
           );
@@ -78,7 +78,9 @@ const NewProduct = ({ marketId }) => {
         </Alert>
       )}
       {progress > 0 && isLoading && (
-        <Loader variation="linear" percentage={progress} isDeterminate />
+        <div style={{ marginBottom: "20x" }}>
+          <Loader variation="linear" percentage={progress} isDeterminate />
+        </div>
       )}
       <Flex justifyContent="space-around" style={{ width: "100%" }}>
         <View>
@@ -86,20 +88,20 @@ const NewProduct = ({ marketId }) => {
             label="Add Product Description"
             placeholder="Description"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={e => setDescription(e.target.value)}
           />
           <TextField
             type="text"
             label="Set Product Price"
             placeholder="Price ($USD)"
             value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={e => setPrice(e.target.value)}
           />
           <RadioGroupField
             name="status"
             value={shipped}
             label="Is the Product Shipped or Emailed to the Customer?"
-            onChange={(e) => setShipped(e.target.value)}
+            onChange={e => setShipped(e.target.value)}
           >
             <Radio value="true">Shipped</Radio>
             <Radio value="false">Emailed</Radio>
@@ -115,7 +117,7 @@ const NewProduct = ({ marketId }) => {
           </div>
         </View>
         <View width={"25%"}>
-          <ImageUploading value={image} onChange={(data) => setImage(data)}>
+          <ImageUploading value={image} onChange={data => setImage(data)}>
             {({ imageList, onImageUpload }) => (
               <>
                 {imageList.length > 0 && (

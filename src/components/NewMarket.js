@@ -17,7 +17,7 @@ const NewMarket = () => {
 
   const [tags, setTags] = useState("");
 
-  const { user } = useAuthenticator((context) => [context.user]);
+  const { user } = useAuthenticator(context => [context.user]);
 
   const handleAddMarket = async () => {
     try {
@@ -46,7 +46,7 @@ const NewMarket = () => {
           <TextField
             label="Add Market Name"
             placeholder="Market name"
-            onChange={(e) => setMarketName(e.currentTarget.value)}
+            onChange={e => setMarketName(e.currentTarget.value)}
             value={marketName}
           />
         </div>
@@ -54,10 +54,12 @@ const NewMarket = () => {
           <SelectField
             label="Market tags"
             value={tags}
-            onChange={(e) => setTags(e.target.value)}
+            onChange={e => setTags(e.target.value)}
           >
-            {options.map((tag) => (
-              <option value={tag}>{tag}</option>
+            {options.map(tag => (
+              <option key={tag} value={tag}>
+                {tag}
+              </option>
             ))}
           </SelectField>
         </div>

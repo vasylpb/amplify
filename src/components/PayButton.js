@@ -1,5 +1,6 @@
 import React from "react";
-import { API } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
+import { getUser } from "../graphql/queries";
 import StripeCheckout from "react-stripe-checkout";
 
 const stripeConfig = {
@@ -8,7 +9,15 @@ const stripeConfig = {
 };
 
 const PayButton = ({ product, user }) => {
-  const handleCharge = async (token) => {
+  const getOwnerEmail = async ownerId => {
+    const result = await API.graphql(
+      graphqlOperation(getUser, { id: ownerId })
+    );
+    return result.data.getUser.email;
+  };
+
+  const handleCharge = async token => {
+    const ownerEmail = await getOwnerEmail(product.owner);
     try {
       const result = await API.post("orderlambda", "/charge", {
         body: {
@@ -17,6 +26,11 @@ const PayButton = ({ product, user }) => {
             currency: stripeConfig.currency,
             amount: product.price,
             description: product.description,
+          },
+          email: {
+            customerEmail: user.attributes.email,
+            shipped: product.shipped,
+            ownerEmail,
           },
         },
       });

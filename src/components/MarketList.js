@@ -25,7 +25,7 @@ const MarketList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearching, setSearching] = useState(false);
 
-  const { user } = useAuthenticator((context) => [context.user]);
+  const { user } = useAuthenticator(context => [context.user]);
 
   const getMarkets = async () => {
     const response = await API.graphql(graphqlOperation(listMarkets));
@@ -41,11 +41,8 @@ const MarketList = () => {
       })
     ).subscribe({
       next: ({ provider, value }) =>
-        setMarkets((prevMarkets) => [
-          ...prevMarkets,
-          value.data.onCreateMarket,
-        ]),
-      error: (error) => console.warn(error),
+        setMarkets(prevMarkets => [...prevMarkets, value.data.onCreateMarket]),
+      error: error => console.warn(error),
     });
     getMarkets();
     return () => {
@@ -53,7 +50,7 @@ const MarketList = () => {
     };
   }, [user.username]);
 
-  const handleSearchTerm = (event) => {
+  const handleSearchTerm = event => {
     setSearchTerm(event.currentTarget.value);
   };
 
@@ -112,8 +109,8 @@ const MarketList = () => {
         />
       </div>
       <Grid templateColumns="1fr 1fr 1fr" columnGap="2.5rem" rowGap="3rem">
-        {markets.map((market) => (
-          <Card variation="elevated">
+        {markets.map(market => (
+          <Card key={market.id} variation="elevated">
             <Flex>
               <span style={{ color: "#F4A261", marginRight: "10px" }}>
                 <Icon icon={cart} />
@@ -127,7 +124,7 @@ const MarketList = () => {
             </Flex>
             <div>{market.owner}</div>
             {Array.isArray(market.tags) &&
-              market.tags.map((tag) => <Badge key={tag}>{tag}</Badge>)}
+              market.tags.map(tag => <Badge key={tag}>{tag}</Badge>)}
           </Card>
         ))}
       </Grid>

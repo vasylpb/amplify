@@ -12,6 +12,7 @@ const awsServerlessExpressMiddleware = require("aws-serverless-express/middlewar
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const AWS = require("aws-sdk");
+const { convertCentsToDollar } = require("../../../../../src/utils");
 
 const config = {
   region: "us-east-1",
@@ -42,6 +43,7 @@ const chargeHandler = async (req, res, next) => {
   const {
     token,
     charge: { currency, amount, description },
+    email,
   } = req.body;
   try {
     const charge = await stripe.charges.create({
@@ -53,6 +55,7 @@ const chargeHandler = async (req, res, next) => {
     if (charge.status === "succeeded") {
       req.charge = charge;
       req.description = description;
+      req.email = email;
       next();
     }
   } catch (error) {
@@ -61,7 +64,11 @@ const chargeHandler = async (req, res, next) => {
 };
 
 const emailHandler = (req, res) => {
-  const { charge } = req;
+  const {
+    charge,
+    description,
+    email: { shipped, customerEmail, ownerEmail },
+  } = req;
 
   SES.sendEmail(
     {
@@ -77,7 +84,29 @@ const emailHandler = (req, res) => {
         Body: {
           Html: {
             Charset: "UTF-8",
-            Data: "<h3>Order Processed!</h3>",
+            Data: `
+              <h3>Order Processed!</h3>
+              <p><strong>${description}</strong> - $ ${convertCentsToDollar(charge.amount)}</p>
+              <p>Customer Email: <a href="mailto:${customerEmail}">${customerEmail}</a></p>
+              <p>Contact your seller: <a href="mailto:${ownerEmail}">${ownerEmail}</a></p>
+              ${
+                shipped
+                  ? `
+                    <h4>Mailing Address</h4>
+                    <p>${charge.source.name}</p>
+                    <p>${charge.source.address_line1}</p>
+                    <p>${charge.source.address_city}, ${charge.source.address_state}, ${charge.source.address_zip} </p>
+                  `
+                  : "Emailed product"
+              }
+              <p style="font-style: italic; color: grey;">
+                ${
+                  shipped
+                    ? "Your product will be shipped in 2-3 days"
+                    : "Check your verified email for your emailed product"
+                }
+              </p>
+            `,
           },
         },
       },

@@ -37,7 +37,7 @@ const Product = ({ product }) => {
   const [price, setPrice] = useState("");
   const [shipped, setShipped] = useState("false");
 
-  const { user } = useAuthenticator((context) => [context.user]);
+  const { user } = useAuthenticator(context => [context.user]);
 
   const openModal = () => {
     setIsOpen(true);
@@ -53,7 +53,7 @@ const Product = ({ product }) => {
     setPrice(convertCentsToDollar(product.price));
   };
 
-  const handleUpdateProduct = async (id) => {
+  const handleUpdateProduct = async id => {
     try {
       closeModal();
       const input = {
@@ -71,7 +71,7 @@ const Product = ({ product }) => {
     }
   };
 
-  const handleDeleteProduct = async (id) => {
+  const handleDeleteProduct = async id => {
     try {
       await API.graphql(graphqlOperation(deleteProduct, { input: { id } }));
     } catch (error) {
@@ -116,7 +116,7 @@ const Product = ({ product }) => {
               </Button>
             </div>
           )}
-          <PayButton product={product} user={user} />
+          {!isProductOwner && <PayButton product={product} user={user} />}
         </Flex>
       </Card>
       <Modal
@@ -131,20 +131,20 @@ const Product = ({ product }) => {
             label="Update Description"
             placeholder="Description"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={e => setDescription(e.target.value)}
           />
           <TextField
             type="number"
             label="Update Price"
             placeholder="Price ($USD)"
             value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={e => setPrice(e.target.value)}
           />
           <RadioGroupField
             name="status"
             label="Update shipping"
             value={shipped}
-            onChange={(e) => setShipped(e.target.value)}
+            onChange={e => setShipped(e.target.value)}
           >
             <Radio value="true">Shipped</Radio>
             <Radio value="false">Emailed</Radio>

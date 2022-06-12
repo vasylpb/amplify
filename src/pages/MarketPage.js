@@ -44,13 +44,14 @@ const getMarket = /* GraphQL */ `
   }
 `;
 
-const MarketPage = (props) => {
+const MarketPage = props => {
   const [market, setMarket] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const [tabIndex, setTabIndex] = useState(0);
 
   const { marketId } = props.match.params;
 
-  const { user } = useAuthenticator((context) => [context.user]);
+  const { user } = useAuthenticator(context => [context.user]);
 
   const handleGetMarket = async () => {
     const result = await API.graphql(
@@ -69,13 +70,14 @@ const MarketPage = (props) => {
       })
     ).subscribe({
       next: ({ provider, value }) => {
-        setMarket((prevMarket) => ({
+        setMarket(prevMarket => ({
           ...prevMarket,
           products: {
             ...prevMarket.products,
             items: [value.data.onCreateProduct, ...prevMarket.products.items],
           },
         }));
+        setTabIndex(0);
       },
     });
     const deleteProductListener = API.graphql(
@@ -85,10 +87,10 @@ const MarketPage = (props) => {
       })
     ).subscribe({
       next: ({ provider, value }) => {
-        setMarket((prevMarket) => {
+        setMarket(prevMarket => {
           const deletedProduct = value.data.onDeleteProduct;
           const updatedProducts = prevMarket.products.items.filter(
-            (item) => item.id !== deletedProduct.id
+            item => item.id !== deletedProduct.id
           );
           return {
             ...prevMarket,
@@ -98,6 +100,7 @@ const MarketPage = (props) => {
             },
           };
         });
+        setTabIndex(0);
       },
     });
     return () => {
@@ -109,6 +112,7 @@ const MarketPage = (props) => {
   if (isLoading) {
     return <Loader size="large" />;
   }
+  const isMarketOwner = user && user.attributes.sub === market.owner;
 
   const products = market.products.items;
 
@@ -125,19 +129,25 @@ const MarketPage = (props) => {
       <div className="items-center pt-2">
         <span style={{ color: "lightsteelblue" }}>{market.createdAt}</span>
       </div>
-      <Tabs justifyContent="flex-start">
+      <Tabs
+        justifyContent="flex-start"
+        currentIndex={tabIndex}
+        onChange={index => setTabIndex(index)}
+      >
         {products.length > 0 && (
           <TabItem title={`Product List (${products.length})`}>
             <Grid templateColumns="1fr 1fr 1fr" columnGap="2rem">
-              {products.map((product) => (
+              {products.map(product => (
                 <Product key={product.id} product={product} />
               ))}
             </Grid>
           </TabItem>
         )}
-        <TabItem title="Add New Product">
-          <NewProduct marketId={marketId} />
-        </TabItem>
+        {isMarketOwner && (
+          <TabItem title="Add New Product">
+            <NewProduct marketId={marketId} />
+          </TabItem>
+        )}
       </Tabs>
     </>
   );

@@ -1,4 +1,12 @@
-type Market @model @searchable @auth(rules: [{ allow: owner }]) {
+type Market
+  @model
+  @searchable
+  @auth(
+    rules: [
+      { allow: private, operations: [read] },
+      { allow: owner }
+    ]
+  ) {
   id: ID!
   name: String!
   products: [Product] @hasMany(indexName: "byProduct", fields: ["id"])
@@ -7,7 +15,17 @@ type Market @model @searchable @auth(rules: [{ allow: owner }]) {
   createdAt: String
 }
 
-type Product @model @auth(rules: [{ allow: owner, identityClaim: "sub" }]) {
+type Product
+  @model
+  @auth(
+    rules: [
+      { allow: private, operations: [read] },
+      {
+        allow: owner,
+        identityClaim: "sub"
+      }
+    ]
+  ) {
   id: ID!
   marketId: ID! @index(name: "byProduct")
   description: String!
@@ -31,7 +49,7 @@ type User
     mutations: { create: "registerUser", update: "updateUser" }
     subscriptions: null
   )
-  @auth(rules: [{ allow: owner }]) {
+  @auth(rules: [{ allow: private, operations: [read] }, { allow: owner }]) {
   id: ID!
   username: String!
   email: String!
