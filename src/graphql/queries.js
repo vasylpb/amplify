@@ -170,9 +170,9 @@ export const getUser = /* GraphQL */ `
         items {
           id
           userId
+          productId
           createdAt
           updatedAt
-          orderProductId
           owner
         }
         nextToken

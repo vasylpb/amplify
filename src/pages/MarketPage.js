@@ -4,6 +4,8 @@ import { API, graphqlOperation } from "aws-amplify";
 import { Icon } from "react-icons-kit";
 import { onCreateProduct, onDeleteProduct } from "../graphql/subscriptions";
 import { circleLeft } from "react-icons-kit/iconic/circleLeft";
+import { list2 } from "react-icons-kit/icomoon/list2";
+import { plus } from "react-icons-kit/icomoon/plus";
 import {
   Grid,
   Heading,
@@ -11,6 +13,7 @@ import {
   Tabs,
   TabItem,
   useAuthenticator,
+  Badge,
 } from "@aws-amplify/ui-react";
 import Product from "../components/Product";
 import NewProduct from "../components/NewProduct";
@@ -130,12 +133,21 @@ const MarketPage = props => {
         <span style={{ color: "lightsteelblue" }}>{market.createdAt}</span>
       </div>
       <Tabs
-        justifyContent="flex-start"
+        justifyContent="center"
         currentIndex={tabIndex}
         onChange={index => setTabIndex(index)}
       >
         {products.length > 0 && (
-          <TabItem title={`Product List (${products.length})`}>
+          <TabItem
+            title={
+              <>
+                <Icon icon={list2} /> Product List{" "}
+                <Badge size="small" variation="info">
+                  {products.length}
+                </Badge>
+              </>
+            }
+          >
             <Grid templateColumns="1fr 1fr 1fr" columnGap="2rem">
               {products.map(product => (
                 <Product key={product.id} product={product} />
@@ -144,7 +156,14 @@ const MarketPage = props => {
           </TabItem>
         )}
         {isMarketOwner && (
-          <TabItem title="Add New Product">
+          <TabItem
+            title={
+              <>
+                <Icon icon={plus} />
+                Add New Product
+              </>
+            }
+          >
             <NewProduct marketId={marketId} />
           </TabItem>
         )}

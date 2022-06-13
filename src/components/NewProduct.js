@@ -8,10 +8,10 @@ import {
   Flex,
   View,
   Image,
-  Alert,
   Loader,
 } from "@aws-amplify/ui-react";
 import { Storage, API, graphqlOperation } from "aws-amplify";
+import { toast } from "react-toastify";
 import ImageUploading from "react-images-uploading";
 import aws_exports from "../aws-exports";
 import { createProduct } from "../graphql/mutations";
@@ -23,7 +23,6 @@ const NewProduct = ({ marketId }) => {
   const [shipped, setShipped] = useState("false");
   const [image, setImage] = useState(null);
   const [isLoading, setUploading] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const { user } = useAuthenticator(context => [context.user]);
@@ -58,12 +57,11 @@ const NewProduct = ({ marketId }) => {
         file,
       };
 
-      const result = await API.graphql(
-        graphqlOperation(createProduct, { input })
-      );
-      setShowAlert(true);
+      await API.graphql(graphqlOperation(createProduct, { input }));
+      toast.success("Procuct added!");
     } catch (e) {
       console.error("Error adding product", e);
+      toast.error("Error adding product!");
     } finally {
       setUploading(false);
     }
@@ -72,11 +70,6 @@ const NewProduct = ({ marketId }) => {
   return (
     <div className="flex-center">
       <h2 className="header">Add New Product</h2>
-      {showAlert && (
-        <Alert isDismissible variation="success">
-          Product successfully added!
-        </Alert>
-      )}
       {progress > 0 && isLoading && (
         <div style={{ marginBottom: "20x" }}>
           <Loader variation="linear" percentage={progress} isDeterminate />

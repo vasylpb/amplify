@@ -1,12 +1,7 @@
 type Market
   @model
   @searchable
-  @auth(
-    rules: [
-      { allow: private, operations: [read] },
-      { allow: owner }
-    ]
-  ) {
+  @auth(rules: [{ allow: private, operations: [read] }, { allow: owner }]) {
   id: ID!
   name: String!
   products: [Product] @hasMany(indexName: "byProduct", fields: ["id"])
@@ -19,11 +14,8 @@ type Product
   @model
   @auth(
     rules: [
-      { allow: private, operations: [read] },
-      {
-        allow: owner,
-        identityClaim: "sub"
-      }
+      { allow: private, operations: [read] }
+      { allow: owner, identityClaim: "sub" }
     ]
   ) {
   id: ID!
@@ -66,7 +58,8 @@ type Order
   @auth(rules: [{ allow: owner }]) {
   id: ID!
   userId: ID! @index(name: "byUser")
-  product: Product @hasOne
+  product: Product @hasOne(fields: ["productId"])
+  productId: ID!
   user: User @belongsTo(fields: ["userId"])
   shippingAddress: ShippingAddress
   createdAt: String

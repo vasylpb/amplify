@@ -12,7 +12,6 @@ const awsServerlessExpressMiddleware = require("aws-serverless-express/middlewar
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const AWS = require("aws-sdk");
-const { convertCentsToDollar } = require("../../../../../src/utils");
 
 const config = {
   region: "us-east-1",
@@ -63,6 +62,8 @@ const chargeHandler = async (req, res, next) => {
   }
 };
 
+const convertCentsToDollar = price => (price / 100).toFixed(2);
+
 const emailHandler = (req, res) => {
   const {
     charge,
@@ -86,7 +87,9 @@ const emailHandler = (req, res) => {
             Charset: "UTF-8",
             Data: `
               <h3>Order Processed!</h3>
-              <p><strong>${description}</strong> - $ ${convertCentsToDollar(charge.amount)}</p>
+              <p><strong>${description}</strong> - $ ${convertCentsToDollar(
+              charge.amount
+            )}</p>
               <p>Customer Email: <a href="mailto:${customerEmail}">${customerEmail}</a></p>
               <p>Contact your seller: <a href="mailto:${ownerEmail}">${ownerEmail}</a></p>
               ${

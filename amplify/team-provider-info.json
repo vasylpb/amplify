@@ -19,7 +19,7 @@
       "function": {
         "orderlambda": {
           "deploymentBucketName": "amplify-agora-dev-111014-deployment",
-          "s3Key": "amplify-builds/orderlambda-696a2f317973487a7838-build.zip"
+          "s3Key": "amplify-builds/orderlambda-51324b636e497a6f7676-build.zip"
         }
       }
     }

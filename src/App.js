@@ -4,6 +4,7 @@ import {
   AmplifyProvider,
   // defaultTheme,
 } from "@aws-amplify/ui-react";
+import { ToastContainer } from "react-toastify";
 import { Elements } from "@stripe/react-stripe-js";
 import "@aws-amplify/ui-react/styles.css";
 import { Auth, API, graphqlOperation } from "aws-amplify";
@@ -32,7 +33,7 @@ const theme = {
 };
 
 function App() {
-  const registerNewUser = async (user) => {
+  const registerNewUser = async user => {
     const { data } = await API.graphql(
       graphqlOperation(getUser, { id: user.username })
     );
@@ -60,7 +61,7 @@ function App() {
       return Auth.signIn({
         username,
         password,
-      }).then((data) => {
+      }).then(data => {
         registerNewUser(data);
         return data;
       });
@@ -77,10 +78,19 @@ function App() {
               <main className="app-container">
                 <Switch>
                   <Route exact path="/" component={HomePage} />
-                  <Route path="/profile" component={ProfilePage} />
+                  <Route
+                    path="/profile"
+                    component={() => <ProfilePage user={user} />}
+                  />
                   <Route path="/markets/:marketId" component={MarketPage} />
                 </Switch>
               </main>
+              <ToastContainer
+                position="top-right"
+                hideProgressBar
+                closeOnClick
+                autoClose={3000}
+              />
             </BrowserRouter>
           </Elements>
         )}

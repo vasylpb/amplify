@@ -198,9 +198,9 @@ export const registerUser = /* GraphQL */ `
         items {
           id
           userId
+          productId
           createdAt
           updatedAt
-          orderProductId
           owner
         }
         nextToken
@@ -225,9 +225,9 @@ export const updateUser = /* GraphQL */ `
         items {
           id
           userId
+          productId
           createdAt
           updatedAt
-          orderProductId
           owner
         }
         nextToken
@@ -269,6 +269,7 @@ export const createOrder = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      productId
       user {
         id
         username
@@ -290,7 +291,6 @@ export const createOrder = /* GraphQL */ `
       }
       createdAt
       updatedAt
-      orderProductId
       owner
     }
   }

@@ -12,6 +12,7 @@ import {
   Radio,
 } from "@aws-amplify/ui-react";
 import { API, graphqlOperation } from "aws-amplify";
+import { toast } from "react-toastify";
 import { updateProduct, deleteProduct } from "../graphql/mutations";
 import { AmplifyS3Image } from "@aws-amplify/ui-react/legacy";
 import Modal from "react-modal";
@@ -66,16 +67,20 @@ const Product = ({ product }) => {
         graphqlOperation(updateProduct, { input })
       );
       console.log("result", result);
+      toast.success("Procuct updated!");
     } catch (error) {
       console.error(`Failed to update product with id ${id}`, error);
+      toast.error("Failed to update product!");
     }
   };
 
   const handleDeleteProduct = async id => {
     try {
       await API.graphql(graphqlOperation(deleteProduct, { input: { id } }));
+      toast.success("Procuct deleted!");
     } catch (error) {
       console.error(`Failed to delete product with id ${id}`, error);
+      toast.error("Failed to delete product!");
     }
   };
 

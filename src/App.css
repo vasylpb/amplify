@@ -300,3 +300,12 @@ amplify-s3-image {
     display: none;
   }
 }
+
+.amplify-heading.heading-blue {
+  margin: 10px 0 20px;
+  color: var(--amplify-colors-blue-80);
+}
+
+strong {
+  color: gray;
+}
