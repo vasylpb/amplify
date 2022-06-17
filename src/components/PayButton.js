@@ -48,7 +48,6 @@ const PayButton = ({ product, user }) => {
           },
         },
       });
-      console.log("result", result);
       if (result.charge.status === ORDER_STATUS.success) {
         let shippingAddress = null;
         if (product.shipped) {

@@ -7,6 +7,7 @@ import {
   SelectField,
 } from "@aws-amplify/ui-react";
 import { Icon } from "react-icons-kit";
+import Modal from "../components/Modal";
 import { pencil } from "react-icons-kit/icomoon/pencil";
 import { createMarket } from "../graphql/mutations";
 
@@ -14,10 +15,18 @@ const options = ["Arts", "Crafts", "Entertainment"];
 
 const NewMarket = () => {
   const [marketName, setMarketName] = useState("");
-
+  const [modalIsOpen, setIsOpen] = useState(false);
   const [tags, setTags] = useState("");
 
   const { user } = useAuthenticator(context => [context.user]);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
 
   const handleAddMarket = async () => {
     try {
@@ -36,12 +45,30 @@ const NewMarket = () => {
     <>
       <div className="market-header">
         <h1 className="market-title">Create Your MarketPlace</h1>
-        <Button className="market-title-button" variation="link">
+        <Button
+          className="market-title-button"
+          variation="link"
+          onClick={() => openModal()}
+          style={{ marginLeft: 15 }}
+        >
           <Icon icon={pencil} size={32} />
         </Button>
       </div>
 
-      <div style={{ width: "70%" }}>
+      <Modal
+        title="Add Market"
+        closeModal={closeModal}
+        isOpen={modalIsOpen}
+        buttons={
+          <Button
+            variation="primary"
+            disabled={!marketName}
+            onClick={handleAddMarket}
+          >
+            Create Market
+          </Button>
+        }
+      >
         <div style={{ marginBottom: "20px" }}>
           <TextField
             label="Add Market Name"
@@ -63,16 +90,7 @@ const NewMarket = () => {
             ))}
           </SelectField>
         </div>
-        <div>
-          <Button
-            variation="primary"
-            disabled={!marketName}
-            onClick={handleAddMarket}
-          >
-            Create Market
-          </Button>
-        </div>
-      </div>
+      </Modal>
     </>
   );
 };

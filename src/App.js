@@ -5,17 +5,16 @@ import {
   // defaultTheme,
 } from "@aws-amplify/ui-react";
 import { ToastContainer } from "react-toastify";
-import { Elements } from "@stripe/react-stripe-js";
 import "@aws-amplify/ui-react/styles.css";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import { stripePromise } from "./utils/stripe";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
 import MarketPage from "./pages/MarketPage";
 import { getUser } from "./graphql/queries";
 import { registerUser } from "./graphql/mutations";
+import UserProvider from "./providers/UserProvider";
 
 const theme = {
   name: "pretty",
@@ -72,8 +71,8 @@ function App() {
     <AmplifyProvider theme={theme}>
       <Authenticator services={services}>
         {({ user, signOut }) => (
-          <Elements stripe={stripePromise}>
-            <BrowserRouter>
+          <BrowserRouter>
+            <UserProvider user={user}>
               <Navbar user={user.attributes.email} signOut={signOut} />
               <main className="app-container">
                 <Switch>
@@ -91,8 +90,8 @@ function App() {
                 closeOnClick
                 autoClose={3000}
               />
-            </BrowserRouter>
-          </Elements>
+            </UserProvider>
+          </BrowserRouter>
         )}
       </Authenticator>
     </AmplifyProvider>

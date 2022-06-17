@@ -10,13 +10,9 @@ import {
   Text,
   Card,
   Collection,
-  // Table,
-  // TableCell,
-  // TableBody,
-  // TableHead,
-  // TableRow,
 } from "@aws-amplify/ui-react";
-import { convertCentsToDollar } from "../utils";
+import { convertCentsToDollar, formatOrderDate } from "../utils";
+import User from "../components/User";
 
 const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
@@ -25,7 +21,7 @@ const getUser = /* GraphQL */ `
       username
       email
       registered
-      orders {
+      orders(sortDirection: DESC, limit: 999) {
         items {
           id
           userId
@@ -69,7 +65,6 @@ const ProfilePage = ({ user }) => {
   const getUserOrders = async userId => {
     const input = { id: userId };
     const result = await API.graphql(graphqlOperation(getUser, input));
-    console.log("result", result);
     setOrders(result.data.getUser.orders.items);
   };
 
@@ -82,9 +77,7 @@ const ProfilePage = ({ user }) => {
           </>
         }
       >
-        <Heading level={3} className="heading-blue">
-          Profile summary
-        </Heading>
+        <User user={user} />
       </TabItem>
       <TabItem
         title={
@@ -101,7 +94,7 @@ const ProfilePage = ({ user }) => {
           type="list"
           items={orders}
           direction="row"
-          justifyContent="space-between"
+          justifyContent="flex-start"
           wrap="wrap"
         >
           {(order, index) => (
@@ -115,7 +108,8 @@ const ProfilePage = ({ user }) => {
                 {convertCentsToDollar(order.product.price)}
               </Text>
               <Text>
-                <strong>Purchased on:</strong> {order.createdAt}
+                <strong>Purchased on:</strong>{" "}
+                {formatOrderDate(order.createdAt)}
               </Text>
               {order.shippingAddress && (
                 <>

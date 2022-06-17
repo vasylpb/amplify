@@ -1,42 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Link as ReactRouterLink } from "react-router-dom";
 import {
   Card,
   Button,
   Flex,
   useAuthenticator,
-  IconClose,
-  IconSave,
-  View,
   TextField,
   RadioGroupField,
   Radio,
+  Link,
 } from "@aws-amplify/ui-react";
 import { API, graphqlOperation } from "aws-amplify";
 import { toast } from "react-toastify";
 import { updateProduct, deleteProduct } from "../graphql/mutations";
 import { AmplifyS3Image } from "@aws-amplify/ui-react/legacy";
-import Modal from "react-modal";
+import Modal from "../components/Modal";
 import { Icon } from "react-icons-kit";
 import { mail2, boxAdd } from "react-icons-kit/icomoon";
 import { convertCentsToDollar, convertDollarsToCents } from "../utils";
 import PayButton from "./PayButton";
-
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
+import { UserContext } from "../providers/UserProvider";
 
 const Product = ({ product }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [shipped, setShipped] = useState("false");
+
+  const { userAttributes } = useContext(UserContext);
 
   const { user } = useAuthenticator(context => [context.user]);
 
@@ -84,7 +75,9 @@ const Product = ({ product }) => {
     }
   };
 
-  const isProductOwner = user && user.attributes.sub === product.owner;
+  const isProductOwner = user && userAttributes.sub === product.owner;
+
+  const isEmailVerified = user && userAttributes.email_verified;
 
   return (
     <>
@@ -121,17 +114,23 @@ const Product = ({ product }) => {
               </Button>
             </div>
           )}
-          {!isProductOwner && <PayButton product={product} user={user} />}
+          {isEmailVerified ? (
+            !isProductOwner && <PayButton product={product} user={user} />
+          ) : (
+            <Link as={ReactRouterLink} to="/profile">
+              Verify Email
+            </Link>
+          )}
         </Flex>
       </Card>
       <Modal
         isOpen={modalIsOpen}
-        style={customStyles}
+        title="Update Product"
         onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
+        save={handleUpdateProduct}
       >
-        <View width="20rem">
-          <h3>Update Product</h3>
+        <>
           <TextField
             label="Update Description"
             placeholder="Description"
@@ -154,20 +153,7 @@ const Product = ({ product }) => {
             <Radio value="true">Shipped</Radio>
             <Radio value="false">Emailed</Radio>
           </RadioGroupField>
-          <Flex style={{ marginTop: "40px" }}>
-            <Button
-              variation="primary"
-              onClick={() => handleUpdateProduct(product.id)}
-            >
-              <IconSave />
-              Save
-            </Button>
-            <Button onClick={closeModal}>
-              <IconClose />
-              Cancel
-            </Button>
-          </Flex>
-        </View>
+        </>
       </Modal>
     </>
   );

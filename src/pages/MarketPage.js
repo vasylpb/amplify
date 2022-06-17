@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { API, graphqlOperation } from "aws-amplify";
 import { Icon } from "react-icons-kit";
@@ -17,13 +17,15 @@ import {
 } from "@aws-amplify/ui-react";
 import Product from "../components/Product";
 import NewProduct from "../components/NewProduct";
+import { formatProductDate } from "../utils";
+import { UserContext } from "../providers/UserProvider";
 
 const getMarket = /* GraphQL */ `
   query GetMarket($id: ID!) {
     getMarket(id: $id) {
       id
       name
-      products {
+      products(sortDirection: DESC, limit: 999) {
         items {
           id
           marketId
@@ -53,6 +55,8 @@ const MarketPage = props => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const { marketId } = props.match.params;
+
+  const { userAttributes } = useContext(UserContext);
 
   const { user } = useAuthenticator(context => [context.user]);
 
@@ -115,7 +119,9 @@ const MarketPage = props => {
   if (isLoading) {
     return <Loader size="large" />;
   }
-  const isMarketOwner = user && user.attributes.sub === market.owner;
+  const isMarketOwner = user && userAttributes.sub === market.owner;
+
+  const isEmailVerified = user && userAttributes.email_verified;
 
   const products = market.products.items;
 
@@ -130,7 +136,9 @@ const MarketPage = props => {
         <Heading level={3}>{market.name}</Heading> - {market.owner}
       </div>
       <div className="items-center pt-2">
-        <span style={{ color: "lightsteelblue" }}>{market.createdAt}</span>
+        <span style={{ color: "lightsteelblue" }}>
+          {formatProductDate(market.createdAt)}
+        </span>
       </div>
       <Tabs
         justifyContent="center"
@@ -164,7 +172,13 @@ const MarketPage = props => {
               </>
             }
           >
-            <NewProduct marketId={marketId} />
+            {isEmailVerified ? (
+              <NewProduct marketId={marketId} />
+            ) : (
+              <Link className="link" to="/profile">
+                Verify Your Email Before Adding Products
+              </Link>
+            )}
           </TabItem>
         )}
       </Tabs>
